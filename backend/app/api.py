@@ -45,3 +45,32 @@ todos = [
 @app.get("/todo", tags=["todos"])
 async def get_todos() -> dict:
     return {"data": todos}
+
+#Post todos route
+@app.post("/todo", tags=["todos"])
+async def add_todo(todo:dict) -> dict:
+    todos.append(todo)
+    return {"data":{"Todo has been added!"}}
+
+#Put todos route
+@app.put("/todo/{id}", tags=["todos"])
+async def update_todo(id:int, body:dict) -> dict:
+    for todo in todos:
+        if int(todo["id"]) == id:
+            todo["item"] = body["item"]
+            return {"data":f"Todo with id {id} has been updated!"}
+    return {
+        "data":f"Todo with this {id} number has not benn found!"
+    }
+
+#Delete todos route
+@app.delete("/todo/{id}", tags=["todos"])
+async def delete_todo(id:int) -> dict:
+    for todo in todos:
+        if int(todo["id"]) == id:todos.remove(todo)
+        return{
+            "data":f"Todo with id {id} has been deleted!"
+        }
+    return{
+        "data":f"Todo with id {id} has not been found!"
+    }
